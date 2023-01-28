@@ -43,7 +43,7 @@ db.serialize(() => {
             "total": 0,
             "ninni_zahyou": 0,
             "kokyo_zahyou": 0,
-            "exclude": 0,
+            "special_chiban": 0,
           }
         }
 
@@ -52,7 +52,7 @@ db.serialize(() => {
             "total": 0,
             "ninni_zahyou": 0,
             "kokyo_zahyou": 0,
-            "exclude": 0,
+            "special_chiban": 0,
           }
         }
 
@@ -60,8 +60,8 @@ db.serialize(() => {
         exportJSON[prefCode][localGovCode]["total"] += 1
 
         if (isSpecialChiban) {
-          exportJSON[prefCode]["exclude"] += 1
-          exportJSON[prefCode][localGovCode]["exclude"] += 1
+          exportJSON[prefCode]["special_chiban"] += 1
+          exportJSON[prefCode][localGovCode]["special_chiban"] += 1
         } else if (isNinniZahyou) {
           exportJSON[prefCode]["ninni_zahyou"] += 1
           exportJSON[prefCode][localGovCode]["ninni_zahyou"] += 1
