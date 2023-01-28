@@ -24,30 +24,26 @@ db.serialize(() => {
 
         counter = progressBar.progressBar(counter, totalCount, startTime);
 
+        const prefCode = row["ZIPファイル名"].slice(0, 2) // 都道府県コードを取得
+        const localGovCode = row["ZIPファイル名"].slice(0, 5) // 市区町村コードを取得
+        const isNinniZahyou = row["zip_filename"] !== null // 任意座標かどうか
+        const isSpecialChiban = !row["地番"].match(/^[0-9]/) // 数字で始まらない地番は除外
+        const isCSVHeader = row["ZIPファイル名"] === "ZIPファイル名" // CSV のヘッダーかどうか
+
         // search_list に CSV のヘッダーが入っているので、それを除外する
-        if ("ZIPファイル名" === row["ZIPファイル名"]) {
+        if (isCSVHeader) {
           exportJSON.exclude += 1
           return;
         } else {
           exportJSON.total += 1
         }
 
-        // 地番が数字で始まらないものを除外する
-        if (!row["地番"].match(/^[0-9]/)) {
-          return;
-        }
-
-        // 都道府県コードを取得
-        const prefCode = row["ZIPファイル名"].slice(0, 2)
-        // 市区町村コードを取得
-        const localGovCode = row["ZIPファイル名"].slice(0, 5)
-        const isNinniZahyou = row["zip_filename"] !== null
-
         if (exportJSON[prefCode] === undefined) {
           exportJSON[prefCode] = {
             "total": 0,
             "ninni_zahyou": 0,
             "kokyo_zahyou": 0,
+            "exclude": 0,
           }
         }
 
@@ -56,14 +52,17 @@ db.serialize(() => {
             "total": 0,
             "ninni_zahyou": 0,
             "kokyo_zahyou": 0,
+            "exclude": 0,
           }
         }
-
 
         exportJSON[prefCode]["total"] += 1
         exportJSON[prefCode][localGovCode]["total"] += 1
 
-        if (isNinniZahyou) {
+        if (isSpecialChiban) {
+          exportJSON[prefCode]["exclude"] += 1
+          exportJSON[prefCode][localGovCode]["exclude"] += 1
+        } else if (isNinniZahyou) {
           exportJSON[prefCode]["ninni_zahyou"] += 1
           exportJSON[prefCode][localGovCode]["ninni_zahyou"] += 1
         } else {
