@@ -19,7 +19,7 @@ db.serialize(() => {
     const totalCount = count.count;
 
     db.each(
-      "SELECT * FROM search_list LEFT JOIN ninni_zahyou on ninni_zahyou.zip_filename = search_list.'ZIPファイル名' limit 1000000;",
+      "SELECT * FROM search_list LEFT JOIN ninni_zahyou on ninni_zahyou.zip_filename = search_list.'ZIPファイル名';",
       (err, row) => {
 
         progressBar.progressBar(i, totalCount, startTime);
@@ -75,7 +75,7 @@ db.serialize(() => {
 
       },
       (err, all_count) => {
-        
+
         db.close();
         fs.writeFileSync("./export.json", JSON.stringify(exportJSON, null, 2));
 
