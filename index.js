@@ -4,7 +4,7 @@ const sqlite3 = require("sqlite3");
 const fs = require("fs");
 const progressBar = require("progress-bar-cli");
 let startTime = new Date();
-let i = 0;
+let counter = 0;
 
 const db = new sqlite3.Database("./all-search-list.sqlite3");
 let exportJSON = {
@@ -22,7 +22,7 @@ db.serialize(() => {
       "SELECT * FROM search_list LEFT JOIN ninni_zahyou on ninni_zahyou.zip_filename = search_list.'ZIPファイル名';",
       (err, row) => {
 
-        progressBar.progressBar(i, totalCount, startTime);
+        counter = progressBar.progressBar(counter, totalCount, startTime);
 
         // search_list に CSV のヘッダーが入っているので、それを除外する
         if ("ZIPファイル名" === row["ZIPファイル名"]) {
@@ -70,8 +70,6 @@ db.serialize(() => {
           exportJSON[prefCode]["kokyo_zahyou"] += 1
           exportJSON[prefCode][localGovCode]["kokyo_zahyou"] += 1
         }
-
-        i += 1;
 
       },
       (err, all_count) => {
