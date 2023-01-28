@@ -5,34 +5,40 @@ const fs = require("fs");
 const db = new sqlite3.Database("./all-search-list.sqlite3");
 let exportJSON = {}
 
-const get = (sql, params) => {
-  return new Promise((resolve, reject) => {
-    db.get(sql, params, (err, row) => {
-      if (err) reject(err);
-      resolve(row);
-    });
-  });
-}
+db.serialize(() => {
 
-const all = (sql, params) => {
-  return new Promise((resolve, reject) => {
-    db.all(sql, params, (err, row) => {
-      if (err) reject(err);
-      resolve(row);
-    });
-  });
-}
+  db.each(
+    "select ZIPファイル名 from search_list limit 100000",
+    (err, row) => {
 
-(async () => {
+      // 都道府県コードを取得
+      const prefCode = row["ZIPファイル名"].slice(0, 2)
 
-  // 日本全国の筆数を取得
-  const total = await get("select count(*) from search_list")
-  exportJSON["total"] = total["count(*)"]
+      if (exportJSON[prefCode] === undefined) {
+        exportJSON[prefCode] = {
+          "pref_total": 0,
+        }
+      }
 
-  // search_list から 全てのデータを取得し、for 文で 市区町村事にカウントしたい
-  const search_list = await all("select ZIPファイル名 from search_list")  
+      exportJSON[prefCode]["pref_total"] += 1
 
-  db.close();
+      // 市区町村コードを取得
+      const localGovCode = row["ZIPファイル名"].slice(0, 5)
 
-  fs.writeFileSync("./export.json", JSON.stringify(exportJSON, null, 2));
-})();
+      if (exportJSON[prefCode][localGovCode] === undefined) {
+        exportJSON[prefCode][localGovCode] = {"total": 0}
+      }
+
+      exportJSON[prefCode][localGovCode]["total"] += 1
+
+    },
+    (err, all_count) => {
+      console.log("all_count");
+      console.log(all_count);
+      
+      db.close();
+      fs.writeFileSync("./export.json", JSON.stringify(exportJSON, null, 2));
+
+    }
+  )
+});
