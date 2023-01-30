@@ -5,7 +5,7 @@
 
 ### 1. データのダウンロード
 
-登記所備付地図データを、任意座標、公共座標別で、XMLファイルに分類したデータが保存されている、sqlite を以下のURLからダウンロードし、ディレクトリ内に配置してください。
+登記所備付地図データを、任意座標、公共座標別で、XMLファイルに分類したデータが保存されている、SQLite を以下のURLからダウンロードし、ディレクトリ内に配置してください。
 
 https://s3.console.aws.amazon.com/s3/object/gl-moj-map-mirror?region=ap-northeast-1&prefix=all-search-list.sqlite3  
 （Geolonia のAWSマネジメントコンソールへのログインが必要です）
