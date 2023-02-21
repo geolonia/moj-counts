@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "export NODE_OPTIONS=\"--max-old-space-size=16000\" && node index.js"
+    "build": "export NODE_OPTIONS=\"--max-old-space-size=16000\" && node index.js && npm run convert:csv",
+    "convert:csv": "node json2csv.js"
   },
   "keywords": [],
   "author": "",
