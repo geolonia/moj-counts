@@ -14,7 +14,7 @@ https://s3.console.aws.amazon.com/s3/object/gl-moj-map-mirror?region=ap-northeas
 
 ### 2. 集計
 
-`npm run build` で、`./output/`ディレクトリ内に、JSONファイル(`chiban-count.json`) と CSV ファイル(`pref-chiban-count.csv`(都道府県)、`admin-chiban-count.csv`（市区町村）)を作成します。 CSVファイルは、集計した JSON ファイルを、都道府県、市区町村別に CSV に変換したものです。
+`npm run build` で、`./output/`ディレクトリ内に、JSONファイル(`chiban-count.json`) と CSV ファイル(`pref-chiban-count.csv`(都道府県)、`admin-chiban-count.csv`（市区町村）)を作成します。 CSVファイルは、集計した JSON ファイルを、都道府県、市区町村別に変換したものです。
 
 - 所要時間: 2時間程度
 - メモリ16GB以上を推奨します
