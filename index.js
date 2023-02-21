@@ -90,7 +90,7 @@ function processChunk() {
         console.log("finish");
         // 全データ処理が終了したら、以下の処理を実行
         db.close();
-        fs.writeFileSync("./output.json", JSON.stringify(exportJSON, null, 2));
+        fs.writeFileSync("./output/chiban-count.json", JSON.stringify(exportJSON, null, 2));
       }
     }
   );
