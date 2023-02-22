@@ -36,11 +36,20 @@ function processChunk() {
 
         const row = rows[i];
         const prefCode = row["ZIPファイル名"].slice(0, 2) // 都道府県コードを取得
-        const localGovCode = row["ZIPファイル名"].slice(0, 5) // 市区町村コードを取得
+        let localGovCode = row["ZIPファイル名"].slice(0, 5) // 市区町村コードを取得
         const isNinniZahyou = row["zip_filename"] !== null // 任意座標かどうか
         const isSpecialChiban = !row["地番"].match(/^[0-9]/) // 数字で始まらない地番は除外
         const isCSVHeader = row["ZIPファイル名"] === "ZIPファイル名" // CSV のヘッダーかどうか
-      
+        
+        // NOTE: reference => https://www.soumu.go.jp/main_content/000562726.pdf
+        if (localGovCode === "01439") {
+          localGovCode = "01472" //幌延町の市区町村コードを更新
+        }
+
+        if (localGovCode === "01488") {
+          localGovCode = "01520" //幌加内町の市区町村コードを更新
+        }
+                
         // search_list に CSV のヘッダーが入っているので、それを除外する
         if (isCSVHeader) {
           exportJSON.exclude += 1
