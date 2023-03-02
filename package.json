@@ -16,5 +16,8 @@
     "csv-writer": "^1.6.0",
     "progress-bar-cli": "^1.0.4",
     "sqlite3": "^5.1.4"
+  },
+  "devDependencies": {
+    "glob": "^9.1.2"
   }
 }
