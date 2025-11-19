@@ -38,7 +38,18 @@ function processChunk() {
         const prefCode = row["ZIPファイル名"].slice(0, 2) // 都道府県コードを取得
         let localGovCode = row["ZIPファイル名"].slice(0, 5) // 市区町村コードを取得
         const isNinniZahyou = row["zip_filename"] !== null // 任意座標かどうか
-        const isSpecialChiban = !row["地番"].match(/^[0-9]/) // 数字で始まらない地番は除外
+        // 地番住所かどうか (参考リンク: https://www1.touki.or.jp/pdf/tiban_group.pdf)
+        // ※めがね地番、二重地番、分属管理地番は重複してカウント (参考リンク: https://www.moj.go.jp/content/000116464.pdf#page=15)
+        const isAddressChiban = (
+          (
+            row["地番"].match(/^[-0-9A-Uぁ-んｦ-ﾟヰヱ子丑寅卯辰巳午未申酉戌亥東西南北内外上中下甲乙丙丁戊己庚辛壬癸第号区]+((V|W)\d+|X\(\d+\/\d+\))?$/)
+            // 愛媛県の耕地を含む地番を考慮
+            || row["地番"].match(/^[0-9]+-耕地[-0-9A-U甲乙丙丁戊己庚辛壬癸]+((V|W)\d+|X\(\d+\/\d+\))?$/)
+          )
+          // 先頭・末尾のハイフン、連続ハイフン、同一グループ文字の連続は除外
+          && !row["地番"].match(/(^-|-$|\-{2}|[A-U]{2}|[ぁ-ん]{2}|[ｦ-ﾟヰヱ]{2}|[子丑寅卯辰巳午未申酉戌亥]{2}|[東西南北]{2}|[内外]{2}|[上中下]{2}|[甲乙丙丁戊己庚辛壬癸]{2}|[第号区]{2})/)
+        );
+        const isSpecialChiban = !isAddressChiban // 地番住所以外の地番は除外
         const isCSVHeader = row["ZIPファイル名"] === "ZIPファイル名" // CSV のヘッダーかどうか
         
         // NOTE: reference => https://www.soumu.go.jp/main_content/000562726.pdf
