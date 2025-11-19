@@ -2,3 +2,9 @@ all-search-list.sqlite3
 specialChiban.json
 normalChiban.json
 performance.log
+
+node_modules/
+
+*.DS_Store
+*.code-workspace
+.vscode/
